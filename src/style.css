@@ -38,7 +38,7 @@
 
 .bar{
   background-color: var(--box-background);
-  border-radius: 0.5rem;
+  border-radius: 0 0 0.5rem 0.5rem;
   overflow: hidden;
   color: var(--box-color);
 }
@@ -64,6 +64,7 @@
 }
 
 .list-size {
+  background-color: var(--color-primary);
   border: solid 0px;
   border-radius: 8px;
   height: 7px;
@@ -80,4 +81,11 @@
   -webkit-appearance: none;
   cursor: ew-resize;
   background: var(--background-secondary);
+}
+
+.list-size-value{
+  margin-top: 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-primary);
 }
