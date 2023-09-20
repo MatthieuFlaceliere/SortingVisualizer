@@ -1,0 +1,19 @@
+name: Build
+
+on:
+  pull_request:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use node 18
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18.x"
+      - name: Install dependencies
+        run: yarn --frozen-lockfile
+      - name: Build
+        run: yarn run build
