@@ -114,7 +114,7 @@ listSizeInput.addEventListener('input', function() {
  * @returns Array<number>
  * @description Sort list with bubble sort algorithm
  */
-const bubbleSort = (list: Array<number>): Array<number> => {
+/*const bubbleSort = (list: Array<number>): Array<number> => {
   let swapped: boolean = false
   do {
     swapped = false
@@ -129,7 +129,7 @@ const bubbleSort = (list: Array<number>): Array<number> => {
   } while (swapped)
 
   return list
-}
+}*/
 
 //#endregion Sort functions
 
