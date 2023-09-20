@@ -1,0 +1,83 @@
+:root {
+  --background-primary: #242424;
+  --background-secondary: #eebbc3;
+  --color-primary: #fffffe;
+  --color-secondary: #232946;
+  --box-background: #fffffe;
+  --box-color: #232946;
+
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: var(--color-primary);
+  background-color: var(--background);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+
+}
+
+#app {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.bar-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+  height: 500px;
+}
+
+.bar{
+  background-color: var(--box-background);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  color: var(--box-color);
+}
+
+.input-container{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.generate-btn{
+  margin-top: 2rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  background-color: var(--background-secondary);
+  color: var(--color-secondary);
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.list-size {
+  border: solid 0px;
+  border-radius: 8px;
+  height: 7px;
+  width: 400px;
+  outline: none;
+  transition: background 450ms ease-in;
+  -webkit-appearance: none;
+}
+
+.list-size::-webkit-slider-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  -webkit-appearance: none;
+  cursor: ew-resize;
+  background: var(--background-secondary);
+}
