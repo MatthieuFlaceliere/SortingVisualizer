@@ -19,13 +19,17 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
+}
 
+body {
+  margin: 0;
+  padding: 0;
 }
 
 #app {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 0 2rem;
   text-align: center;
 }
 
@@ -36,14 +40,14 @@
   height: 500px;
 }
 
-.bar{
+.bar {
   background-color: var(--box-background);
   border-radius: 0 0 0.5rem 0.5rem;
   overflow: hidden;
   color: var(--box-color);
 }
 
-.input-container{
+.input-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -72,7 +76,7 @@
   outline: none;
   transition: background 450ms ease-in;
   -webkit-appearance: none;
-          appearance: none;
+  appearance: none;
 }
 
 .list-size::-webkit-slider-thumb {
@@ -84,14 +88,30 @@
   background: var(--background-secondary);
 }
 
-.list-size-value{
+.list-size::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  cursor: ew-resize;
+  background: var(--background-secondary);
+}
+
+.list-size::-ms-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  cursor: ew-resize;
+  background: var(--background-secondary);
+}
+
+.list-size-value {
   margin-top: 1rem;
   font-size: 1rem;
   font-weight: 600;
   color: var(--color-primary);
 }
 
-.sort-type{
+.sort-type {
   margin-top: 2rem;
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
@@ -103,7 +123,7 @@
   font-weight: 600;
 }
 
-.sort-btn{
+.sort-btn {
   margin-top: 2rem;
   margin-left: 1rem;
   padding: 0.5rem 1rem;
