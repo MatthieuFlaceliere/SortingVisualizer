@@ -11,8 +11,19 @@
       <div class="bar-container"></div>
       <div class="input-container">
         <label class="list-size-value"></label>
-        <input type="range" min="10" max="1000" step="5" class="list-size" />
-        <button class="generate-btn">Generate new list</button>
+        <input type="range" min="10" max="100" step="5" class="list-size" />
+        <!-- <button class="generate-btn">Generate new list</button> -->
+        <div class="sort">
+          <select class="sort-type">
+            <option value="bubble">Bubble sort</option>
+            <option value="insertion">Insertion sort</option>
+            <option value="selection">Selection sort</option>
+            <option value="merge">Merge sort</option>
+            <option value="quick">Quick sort</option>
+            <option value="heap">Heap sort</option>
+          </select>
+          <button class="sort-btn">Sort</button>
+        </div>
       </div>
     </div>
     <script type="module" src="/src/main.ts"></script>
