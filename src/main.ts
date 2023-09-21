@@ -1,7 +1,7 @@
 import "./style.css";
 
 const MIN_LIST_SIZE = 10;
-const LIST: Array<number> = [];
+let LIST: Array<number> = [];
 
 const barContainer: HTMLDivElement = document.querySelector(".bar-container") as HTMLDivElement;
 const listSizeInput = document.querySelector(".list-size") as HTMLInputElement;
@@ -29,7 +29,11 @@ const main = (): void => {
  * @example generateNewList(10)
  */
 const generateNewList = (length: number = 10) => {
+  // Reset list before generate new one
+  LIST = [];
   generateList(length);
+
+  // Reset bar container before add new bar
   barContainer.innerText = "";
   addBarToContainer(LIST, barContainer);
 };
@@ -64,16 +68,16 @@ const addBarToContainer = (
   list: Array<number>,
   container: HTMLElement
 ): void => {
-  let x = 0;
+  let barId = 0;
   list.forEach((item: number) => {
     const bar = document.createElement("div");
     bar.classList.add("bar");
-    bar.id = `bar-${x}`;
+    bar.id = `bar-${barId}`;
     bar.style.height = `${item}%`;
     bar.style.width = `${100 / list.length}%`;
     bar.style.margin = `0 ${100 / list.length / 2}px`;
     container.appendChild(bar);
-    x++;
+    barId++;
   });
 };
 
@@ -180,24 +184,27 @@ sortButton.addEventListener("click", () => {
 const selectionSort = async (list: Array<number>) => {
   for (let i = 0; i < list.length; i++) {
     let min = i;
-    setBarColor(i, "green");
+    setBarColor(i, '#77738E');
     for (let j = i + 1; j < list.length; j++) {
-      setBarColor(j, "red");
+      setBarColor(j, "#A089A4");
       if (list[j] < list[min]) {
         min = j;
       }
-      await sleep(500);
+      await sleep(-LIST.length + 102); 
     }
     if (min !== i) {
+      setBarColor(min, "#EEBBC3");
+      setBarColor(i, "#EEBBC3");
       let tmp = list[i];
       list[i] = list[min];
       list[min] = tmp;
-      await swapBar(i, min);
+      await sleep(250);
+      swapBar(i, min);
     }
-    setBarColor(i, "blue");
+    setBarColor(i, "#C8A1B5");
     resetAllBarColor(i + 1);    
   }
-  resetAllBarColor();
+  // resetAllBarColor();
 };
 
 //#endregion Sort functions
