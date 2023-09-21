@@ -2,10 +2,18 @@ import "./style.css";
 
 const MIN_LIST_SIZE = 10;
 let LIST: Array<number> = [];
+let SPEED = 100;
 
 const barContainer: HTMLDivElement = document.querySelector(".bar-container") as HTMLDivElement;
 const listSizeInput = document.querySelector(".list-size") as HTMLInputElement;
 const listSizeValue = document.querySelector(".list-size-value") as HTMLInputElement;
+
+const speedInput = document.querySelector(".speed") as HTMLInputElement;
+const speedValue = document.querySelector(".speed-value") as HTMLInputElement;
+
+const generateButton = document.querySelector('.generate-btn') as HTMLButtonElement
+const sortButton = document.querySelector(".sort-btn") as HTMLButtonElement;
+
 
 /**
  * MAIN FUNCTION
@@ -14,6 +22,10 @@ const main = (): void => {
   // Set default list size
   listSizeInput.value = MIN_LIST_SIZE.toString();
   updateListSizeValue();
+
+  // Set default speed
+  speedInput.value = SPEED.toString();
+  updateSpeedValue();
 
   // Generate new list
   generateNewList(parseInt(listSizeInput.value));
@@ -81,11 +93,13 @@ const addBarToContainer = (
   });
 };
 
-// const GenerateButton = document.querySelector('.generate-btn') as HTMLButtonElement
-
-// GenerateButton.addEventListener('click', () => {
-//   generateNewList(parseInt(listSizeInput.value))
-// })
+/**
+ * Generate new list event
+ * @description Generate new list when click on generate button
+ */
+generateButton.addEventListener('click', () => {
+  generateNewList(parseInt(listSizeInput.value))
+})
 
 /**
  * Update list size value
@@ -94,7 +108,18 @@ const addBarToContainer = (
  */
 const updateListSizeValue = () => {
   let value: number = parseInt(listSizeInput.value);
-  listSizeValue.innerText = value.toString();
+  listSizeValue.innerText = "List size: " + value.toString();
+};
+
+/**
+ * Update speed value
+ * @returns void
+ * @description Set speed value to the element with class .speed-value
+ */
+const updateSpeedValue = () => {
+  let speed: number = parseInt(speedInput.value);
+  SPEED = -speed + 1 * 101; // If speed = 1 => SPEED = 100, if speed = 100 => SPEED = 1	
+  speedValue.innerText = "Speed: " + speed.toString();
 };
 
 /**
@@ -165,12 +190,35 @@ listSizeInput.addEventListener("input", function () {
 });
 
 /**
+ * Speed input event
+ * @description Update speed value
+ */
+speedInput.addEventListener("input", function () {
+  updateSpeedValue();
+});
+
+/**
  * Sort button event
  * @description Sort list with selection sort algorithm
  */
-const sortButton = document.querySelector(".sort-btn") as HTMLButtonElement;
-sortButton.addEventListener("click", () => {
-  selectionSort(LIST);
+let isSorting = false;
+sortButton.addEventListener("click", async () => {
+  if (isSorting) {
+    isSorting = false;
+    listSizeInput.disabled = false;
+    sortButton.innerText = "Sort"
+    generateButton.disabled = false;
+  }else{
+    listSizeInput.disabled = true;
+    generateButton.disabled = true;
+    sortButton.innerText = "⬛"
+    isSorting = true;
+    await selectionSort(LIST);
+    listSizeInput.disabled = false;
+    sortButton.innerText = "Sort"
+    generateButton.disabled = false;
+    isSorting = false;
+  }
 });
 
 //#endregion Events
@@ -190,15 +238,15 @@ const selectionSort = async (list: Array<number>) => {
       if (list[j] < list[min]) {
         min = j;
       }
-      await sleep(-LIST.length + 102); 
+      await sleep(SPEED); 
     }
     if (min !== i) {
-      setBarColor(min, "#EEBBC3");
-      setBarColor(i, "#EEBBC3");
+      setBarColor(min, "#006C5E");
+      setBarColor(i, "#006C5E");
       let tmp = list[i];
       list[i] = list[min];
       list[min] = tmp;
-      await sleep(250);
+      await sleep(SPEED * (SPEED / 50));
       swapBar(i, min);
     }
     setBarColor(i, "#C8A1B5");
