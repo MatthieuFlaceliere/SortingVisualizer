@@ -122,7 +122,7 @@ const updateListSizeValue = () => {
 const updateSpeedValue = () => {
   let speed: number = parseInt(speedInput.value);
   SPEED = -speed + 1 * 100.01; // If speed = 1 => SPEED = 99.5, if speed = 100 => SPEED = 0.5	
-  speedValue.innerText = "Speed: " + speed.toString();
+  speedValue.innerText = "Speed: x" + speed.toString();
 };
 
 /**
@@ -140,6 +140,15 @@ const sleep = (ms: number) => {
 const setBarColor = (id: number, color: string) => {
   const bar = document.getElementById(`bar-${id}`) as HTMLDivElement;
   bar.style.backgroundColor = color;
+};
+
+/**
+ * Get bar color
+ * @param Bar id
+ */
+const getBarColor = (id: number) => {
+  const bar = document.getElementById(`bar-${id}`) as HTMLDivElement;
+  return bar.style.backgroundColor;
 };
 
 /**
@@ -186,11 +195,13 @@ const updateDisplay = (isSorting: boolean) => {
   if (isSorting) {
     listSizeInput.disabled = true;
     generateButton.disabled = true;
+    sortAlgoSelect.disabled = true;
     sortButton.innerText = "⬛"
   }else{
     listSizeInput.disabled = false;
-    sortButton.innerText = "Sort"
     generateButton.disabled = false;
+    sortAlgoSelect.disabled = false;
+    sortButton.innerText = "Sort"
   }
 }
 
@@ -242,6 +253,9 @@ sortButton.addEventListener("click", async () => {
         break;
       case "bubble":
         await bubbleSort(LIST, cancelSort);
+        break;
+      case "insertion":
+        await insertionSort(LIST, cancelSort);
         break;
 
     }
@@ -302,24 +316,62 @@ const bubbleSort = async (list: Array<number>, cancelSignal: AbortController) =>
         resetAllBarColor();
         return; // Stop sort function
       }
-
+      setBarColor(j, "#77738E");
+      
+      await sleep(SPEED);
       if (list[j] > list[j + 1]) {
-        setBarColor(j, "#006C5E");
-        setBarColor(j + 1, "#006C5E");
         let tmp = list[j];
         list[j] = list[j + 1];
         list[j + 1] = tmp;
-        await sleep(SPEED * (SPEED / 30));
         swapBar(j, j + 1);
+        resetBarColor(j);
+        setBarColor(j + 1, "#006C5E");
+      }else{
+        setBarColor(j + 1, "#006C5E");
+        await sleep(SPEED * (SPEED / 95));
+        resetBarColor(j);
       }
-      setBarColor(j, "#C8A1B5");
-      setBarColor(j + 1, "#C8A1B5");
+
     }
-    setBarColor(i, "#77738E");
+    setBarColor(i, "#C8A1B5");
   }
-  setBarColor(0, "#77738E");
+  setBarColor(0, "#C8A1B5");
 };
-      
+
+/**
+ * Insertion sort
+ * @description Sort list with insertion sort algorithm
+ */
+const insertionSort = async (list: Array<number>, cancelSignal: AbortController) => {
+  for (let i = 1; i < list.length; i++) {
+    let j = i - 1;
+    setBarColor(i - 1, "#77738E");
+    await sleep(SPEED);
+    while (j >= 0 && list[j] > list[j + 1]) {
+      // Check if sort is canceled before each iteration
+      if (cancelSignal.signal.aborted) {
+        resetAllBarColor();
+        return; // Stop sort function
+      }
+
+      await sleep(SPEED * (SPEED / 40));
+      let tmp = list[j];
+      list[j] = list[j + 1];
+      list[j + 1] = tmp;
+      swapBar(j, j + 1);
+      setBarColor(j + 1, getBarColor(j));
+      setBarColor(j, "#006C5E");
+      j--;
+    }
+    if (cancelSignal.signal.aborted) {
+      resetAllBarColor();
+      return; // Stop sort function
+    }
+    setBarColor(j + 1, "#C8A1B5");
+    setBarColor(i - 1, "#C8A1B5");
+  }
+};
+
 
 //#endregion Sort functions
 

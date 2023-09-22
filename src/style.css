@@ -144,6 +144,10 @@ label{
   font-weight: 600;
 }
 
+.sort-algo:disabled{
+  background-color: var(--disabled);
+}
+
 .sort-btn {
   margin-left: 1rem;
   padding: 0.5rem 1rem;
