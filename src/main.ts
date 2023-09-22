@@ -142,6 +142,13 @@ const setBarColor = (id: number, color: string) => {
   bar.style.backgroundColor = color;
 };
 
+const setMultipleBarColor = (start: number, end: number, color: string) => {
+  console.log("Color from", start, "to", end, "with color", color);
+  for (let i = start; i < end; i++) {
+    setBarColor(i, color);
+  }
+};
+
 /**
  * Get bar color
  * @param Bar id
@@ -257,7 +264,10 @@ sortButton.addEventListener("click", async () => {
       case "insertion":
         await insertionSort(LIST, cancelSort);
         break;
-
+      case "merge":
+        await mergeSort(LIST, cancelSort);
+        break;
+      
     }
 
     isSorting = false;
@@ -371,6 +381,68 @@ const insertionSort = async (list: Array<number>, cancelSignal: AbortController)
     setBarColor(i - 1, "#C8A1B5");
   }
 };
+
+/**
+ * Merge sort
+ * @description Sort list with merge sort algorithm
+ */
+const mergeSort = async (list: Array<number>, cancelSignal: AbortController) => {
+  console.log(list);
+  list = await mainMergeSort([...list]);
+  console.log(list);
+};
+
+/**
+ * Main merge sort
+ * @description Main merge sort function
+ */
+const mainMergeSort = async (list: Array<number>, count: number = 0, startRight: number = 0): Promise<Array<number>> => {
+  console.log("startRight: ", startRight, "List: ", list);
+  const half = list.length / 2
+
+  if (list.length < 2){
+    return list
+  }
+
+  const left = list.splice(0, half)
+
+  // Create color for left and right list whit count
+  const color1 = `hsl(${count * 10}, 100%, 50%)`;
+  const color2 = `hsl(${count * 10 + 180}, 100%, 50%)`;
+  
+  console.log(color1, color2);
+  console.log(left, list);
+  console.log("startRight: ", startRight, " left.length: ", left.length, " left.length + list.length: ", left.length + list.length);
+  if (startRight === 0) {
+    setMultipleBarColor(0, left.length, color1);
+    setMultipleBarColor(left.length, left.length + list.length, color2);
+  }else{
+    setMultipleBarColor(startRight, startRight + left.length, color1);
+    setMultipleBarColor(startRight + left.length, startRight + left.length + list.length, color2);
+  }
+  await sleep(1000);
+  return merge(await mainMergeSort(left, count + 100),await mainMergeSort(list, count + 100, startRight + left.length))
+}
+
+/**
+ * Merge two list
+ * @description Merge two list
+ */
+const merge = (left: Array<number>, right: Array<number>): Array<number> => {
+  // let arr: Array<number> = []
+
+  // while (left.length && right.length) {
+  //     if (left[0] < right[0]) {
+  //         arr.push(left.shift() as number)
+  //     } else {
+  //         arr.push(right.shift() as number)
+  //     }
+  // }
+
+  // return [ ...arr, ...left, ...right ]
+  return [...left, ...right]
+}
+
 
 
 //#endregion Sort functions
