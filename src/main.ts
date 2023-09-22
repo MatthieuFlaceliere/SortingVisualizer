@@ -5,6 +5,7 @@ let LIST: Array<number> = [];
 let SPEED = 100;
 
 const barContainer: HTMLDivElement = document.querySelector(".bar-container") as HTMLDivElement;
+
 const listSizeInput = document.querySelector(".list-size") as HTMLInputElement;
 const listSizeValue = document.querySelector(".list-size-value") as HTMLInputElement;
 
@@ -13,6 +14,8 @@ const speedValue = document.querySelector(".speed-value") as HTMLInputElement;
 
 const generateButton = document.querySelector('.generate-btn') as HTMLButtonElement
 const sortButton = document.querySelector(".sort-btn") as HTMLButtonElement;
+
+const sortAlgoSelect = document.querySelector(".sort-algo") as HTMLSelectElement;
 
 
 /**
@@ -118,7 +121,7 @@ const updateListSizeValue = () => {
  */
 const updateSpeedValue = () => {
   let speed: number = parseInt(speedInput.value);
-  SPEED = -speed + 1 * 101; // If speed = 1 => SPEED = 100, if speed = 100 => SPEED = 1	
+  SPEED = -speed + 1 * 100.01; // If speed = 1 => SPEED = 99.5, if speed = 100 => SPEED = 0.5	
   speedValue.innerText = "Speed: " + speed.toString();
 };
 
@@ -174,6 +177,23 @@ const swapBar = (id1: number, id2: number) => {
   bar2.style.height = tmp;
 };
 
+/**
+ * Update diplay if list is currently sorting
+ * @param isSorting
+ * @description Update display if list is currently sorting
+ */
+const updateDisplay = (isSorting: boolean) => {
+  if (isSorting) {
+    listSizeInput.disabled = true;
+    generateButton.disabled = true;
+    sortButton.innerText = "⬛"
+  }else{
+    listSizeInput.disabled = false;
+    sortButton.innerText = "Sort"
+    generateButton.disabled = false;
+  }
+}
+
 //#endregion Utils functions
 
 //#region Events
@@ -202,22 +222,32 @@ speedInput.addEventListener("input", function () {
  * @description Sort list with selection sort algorithm
  */
 let isSorting = false;
+// Abort controller to cancel sort
+let cancelSort = new AbortController();
 sortButton.addEventListener("click", async () => {
   if (isSorting) {
+    // Cancel sort if isSorting is true and reset cancelSort
+    cancelSort.abort();
+    cancelSort = new AbortController();
+    
     isSorting = false;
-    listSizeInput.disabled = false;
-    sortButton.innerText = "Sort"
-    generateButton.disabled = false;
+    updateDisplay(isSorting)
   }else{
-    listSizeInput.disabled = true;
-    generateButton.disabled = true;
-    sortButton.innerText = "⬛"
     isSorting = true;
-    await selectionSort(LIST);
-    listSizeInput.disabled = false;
-    sortButton.innerText = "Sort"
-    generateButton.disabled = false;
+    updateDisplay(isSorting)
+
+    switch (sortAlgoSelect.value) {
+      case "selection":
+        await selectionSort(LIST, cancelSort);
+        break;
+      case "bubble":
+        await bubbleSort(LIST, cancelSort);
+        break;
+
+    }
+
     isSorting = false;
+    updateDisplay(isSorting)
   }
 });
 
@@ -229,16 +259,22 @@ sortButton.addEventListener("click", async () => {
  * Selection sort
  * @description Sort list with selection sort algorithm
  */
-const selectionSort = async (list: Array<number>) => {
+const selectionSort = async (list: Array<number>, cancelSignal: AbortController) => {
   for (let i = 0; i < list.length; i++) {
     let min = i;
     setBarColor(i, '#77738E');
     for (let j = i + 1; j < list.length; j++) {
+      // Check if sort is canceled before each iteration
+      if (cancelSignal.signal.aborted) {
+        resetAllBarColor();
+        return; // Stop sort function
+      }
+
       setBarColor(j, "#A089A4");
       if (list[j] < list[min]) {
         min = j;
       }
-      await sleep(SPEED); 
+      await sleep(SPEED);
     }
     if (min !== i) {
       setBarColor(min, "#006C5E");
@@ -246,14 +282,44 @@ const selectionSort = async (list: Array<number>) => {
       let tmp = list[i];
       list[i] = list[min];
       list[min] = tmp;
-      await sleep(SPEED * (SPEED / 50));
+      await sleep(SPEED * (SPEED / 30));
       swapBar(i, min);
     }
     setBarColor(i, "#C8A1B5");
     resetAllBarColor(i + 1);    
   }
-  // resetAllBarColor();
 };
+
+/**
+ * Bubble sort
+ * @description Sort list with bubble sort algorithm
+ */
+const bubbleSort = async (list: Array<number>, cancelSignal: AbortController) => {
+  for (let i = list.length - 1; i > 0; i--) {
+    for (let j = 0; j < i; j++) {
+      // Check if sort is canceled before each iteration
+      if (cancelSignal.signal.aborted) {
+        resetAllBarColor();
+        return; // Stop sort function
+      }
+
+      if (list[j] > list[j + 1]) {
+        setBarColor(j, "#006C5E");
+        setBarColor(j + 1, "#006C5E");
+        let tmp = list[j];
+        list[j] = list[j + 1];
+        list[j + 1] = tmp;
+        await sleep(SPEED * (SPEED / 30));
+        swapBar(j, j + 1);
+      }
+      setBarColor(j, "#C8A1B5");
+      setBarColor(j + 1, "#C8A1B5");
+    }
+    setBarColor(i, "#77738E");
+  }
+  setBarColor(0, "#77738E");
+};
+      
 
 //#endregion Sort functions
 
