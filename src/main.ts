@@ -91,6 +91,7 @@ const addBarToContainer = (
     bar.style.height = `${item}%`;
     bar.style.width = `${100 / list.length}%`;
     bar.style.margin = `0 ${100 / list.length / 2}px`;
+    // bar.innerText = `${barId}: ${item}`;
     container.appendChild(bar);
     barId++;
   });
@@ -143,7 +144,7 @@ const setBarColor = (id: number, color: string) => {
 };
 
 const setMultipleBarColor = (start: number, end: number, color: string) => {
-  console.log("Color from", start, "to", end, "with color", color);
+  console.log("Set multiple bar color: ", start, end, color)
   for (let i = start; i < end; i++) {
     setBarColor(i, color);
   }
@@ -189,9 +190,13 @@ const swapBar = (id1: number, id2: number) => {
   const bar2 = document.getElementById(`bar-${id2}`) as HTMLDivElement;
 
   const tmp = bar1.style.height;
+  // const tmp2 = bar1.innerText;
+  // bar1.innerText = bar2.innerText;
+  // bar2.innerText = tmp2;
   bar1.style.height = bar2.style.height;
   bar2.style.height = tmp;
 };
+
 
 /**
  * Update diplay if list is currently sorting
@@ -274,7 +279,6 @@ sortButton.addEventListener("click", async () => {
     updateDisplay(isSorting)
   }
 });
-
 //#endregion Events
 
 //#region Sort functions
@@ -387,60 +391,111 @@ const insertionSort = async (list: Array<number>, cancelSignal: AbortController)
  * @description Sort list with merge sort algorithm
  */
 const mergeSort = async (list: Array<number>, cancelSignal: AbortController) => {
-  console.log(list);
-  list = await mainMergeSort([...list]);
-  console.log(list);
+  LIST = await mainMergeSort([...list], cancelSignal);
+  if (cancelSignal.signal.aborted) {
+    generateNewList(parseInt(listSizeInput.value));
+    return; // Stop sort function
+  }
 };
+
+const colorList = [
+  "#77738e",
+  "#6e6e89",
+  "#656983",
+  "#5c657e",
+  "#536078",
+  "#4a5b72",
+  "#42566c",
+  "#3a5265",
+  "#324d5f",
+  "#2a4858"
+]
+
+const getColor = (id: number) => {
+  if (id < colorList.length) {
+    return colorList[id];
+  }else{
+    return colorList[id % colorList.length];
+  }
+}
 
 /**
  * Main merge sort
  * @description Main merge sort function
  */
-const mainMergeSort = async (list: Array<number>, count: number = 0, startRight: number = 0): Promise<Array<number>> => {
-  console.log("startRight: ", startRight, "List: ", list);
+const mainMergeSort = async (list: Array<number>,cancelSignal: AbortController, colorId: number = 0, startRight: number = 0): Promise<Array<number>> => {
   const half = list.length / 2
 
   if (list.length < 2){
     return list
   }
 
+  if (cancelSignal.signal.aborted) 
+  {
+    resetAllBarColor();
+    return list; // Stop sort function
+  }
+
   const left = list.splice(0, half)
 
-  // Create color for left and right list whit count
-  const color1 = `hsl(${count * 10}, 100%, 50%)`;
-  const color2 = `hsl(${count * 10 + 180}, 100%, 50%)`;
+  // Generate opposite color for left and right list
+  const color1 = getColor(colorId);
+  const color2 = getColor(colorList.length - colorId - 1);
   
-  console.log(color1, color2);
-  console.log(left, list);
-  console.log("startRight: ", startRight, " left.length: ", left.length, " left.length + list.length: ", left.length + list.length);
-  if (startRight === 0) {
-    setMultipleBarColor(0, left.length, color1);
-    setMultipleBarColor(left.length, left.length + list.length, color2);
-  }else{
-    setMultipleBarColor(startRight, startRight + left.length, color1);
-    setMultipleBarColor(startRight + left.length, startRight + left.length + list.length, color2);
-  }
-  await sleep(1000);
-  return merge(await mainMergeSort(left, count + 100),await mainMergeSort(list, count + 100, startRight + left.length))
+  setMultipleBarColor(startRight, startRight + left.length, color1);
+  setMultipleBarColor(startRight + left.length, startRight + left.length + list.length, color2);
+
+  const i = startRight + left.length;
+  return merge(await mainMergeSort(left, cancelSignal, colorId + 10, startRight),await mainMergeSort(list, cancelSignal, colorId, i), startRight, cancelSignal) 
 }
 
 /**
  * Merge two list
  * @description Merge two list
  */
-const merge = (left: Array<number>, right: Array<number>): Array<number> => {
-  // let arr: Array<number> = []
+const merge = async (left: Array<number>, right: Array<number>, start: number, cancelSignal: AbortController): Promise<Array<number>> => {
+  const end = start + left.length + right.length;
 
-  // while (left.length && right.length) {
-  //     if (left[0] < right[0]) {
-  //         arr.push(left.shift() as number)
-  //     } else {
-  //         arr.push(right.shift() as number)
-  //     }
-  // }
+  // setMultipleBarColor(start, end, "#C8A1B5");
+  let arr: Array<number> = []
 
-  // return [ ...arr, ...left, ...right ]
-  return [...left, ...right]
+  while (left.length && right.length) {
+    if (left[0] < right[0]) {
+      for (let i = start + arr.length; i < start + arr.length; i++) {
+        setBarColor(i, "#006C5E");
+        await sleep(SPEED);
+        swapBar(i, i+1);
+        setBarColor(i, "#C8A1B5");
+        setBarColor(i+1, "#006C5E");
+
+        if (cancelSignal.signal.aborted) {
+          resetAllBarColor();
+          return [...arr, ...left, ...right]; // Stop sort function
+        }
+      }
+      setBarColor(start + arr.length, "#C8A1B5");
+      arr.push(left.shift() as number)
+      
+    } else {
+      for (let i = start + arr.length + left.length; i > start + arr.length; i--) {
+        setBarColor(i, "#006C5E");
+        await sleep(SPEED);
+        swapBar(i, i-1);
+        setBarColor(i, "#C8A1B5");
+        setBarColor(i-1, "#006C5E");
+        if (cancelSignal.signal.aborted) {
+          resetAllBarColor();
+          return [...arr, ...left, ...right]; // Stop sort function
+        }
+      }
+      setBarColor(start + arr.length, "#C8A1B5");
+      arr.push(right.shift() as number)
+    }
+  }
+    
+  setMultipleBarColor(start, end, getColor(end));
+
+  return [...arr, ...left, ...right]
 }
 
 
