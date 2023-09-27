@@ -1,29 +1,21 @@
-import "./style.css";
+import './style.css';
 
 const MIN_LIST_SIZE = 10;
 let LIST: Array<number> = [];
 let SPEED = 100;
 
-const barContainer: HTMLDivElement = document.querySelector(
-  ".bar-container",
-) as HTMLDivElement;
+const barContainer: HTMLDivElement = document.querySelector('.bar-container') as HTMLDivElement;
 
-const listSizeInput = document.querySelector(".list-size") as HTMLInputElement;
-const listSizeValue = document.querySelector(
-  ".list-size-value",
-) as HTMLInputElement;
+const listSizeInput = document.querySelector('.list-size') as HTMLInputElement;
+const listSizeValue = document.querySelector('.list-size-value') as HTMLInputElement;
 
-const speedInput = document.querySelector(".speed") as HTMLInputElement;
-const speedValue = document.querySelector(".speed-value") as HTMLInputElement;
+const speedInput = document.querySelector('.speed') as HTMLInputElement;
+const speedValue = document.querySelector('.speed-value') as HTMLInputElement;
 
-const generateButton = document.querySelector(
-  ".generate-btn",
-) as HTMLButtonElement;
-const sortButton = document.querySelector(".sort-btn") as HTMLButtonElement;
+const generateButton = document.querySelector('.generate-btn') as HTMLButtonElement;
+const sortButton = document.querySelector('.sort-btn') as HTMLButtonElement;
 
-const sortAlgoSelect = document.querySelector(
-  ".sort-algo",
-) as HTMLSelectElement;
+const sortAlgoSelect = document.querySelector('.sort-algo') as HTMLSelectElement;
 
 /**
  * MAIN FUNCTION
@@ -56,7 +48,7 @@ const generateNewList = (length: number = 10) => {
   generateList(length);
 
   // Reset bar container before add new bar
-  barContainer.innerText = "";
+  barContainer.innerText = '';
   addBarToContainer(LIST, barContainer);
 };
 
@@ -68,11 +60,7 @@ const generateNewList = (length: number = 10) => {
  * @description Generate a list of random numbers
  * @example generateList(10, 100, 5)
  */
-const generateList = (
-  length: number,
-  max: number = 100,
-  min: number = 5,
-): void => {
+const generateList = (length: number, max: number = 100, min: number = 5): void => {
   for (let i = 0; i <= length; i++) {
     LIST.push(Math.floor(Math.random() * (max - min + 1) + min));
   }
@@ -86,14 +74,11 @@ const generateList = (
  * @description Add bar to container element passed in parameter
  * @example addBarToContainer([10, 20, 30], document.querySelector('.bar-container'))
  */
-const addBarToContainer = (
-  list: Array<number>,
-  container: HTMLElement,
-): void => {
+const addBarToContainer = (list: Array<number>, container: HTMLElement): void => {
   let barId = 0;
   list.forEach((item: number) => {
-    const bar = document.createElement("div");
-    bar.classList.add("bar");
+    const bar = document.createElement('div');
+    bar.classList.add('bar');
     bar.id = `bar-${barId}`;
     bar.style.height = `${item}%`;
     bar.style.width = `${100 / list.length}%`;
@@ -108,7 +93,7 @@ const addBarToContainer = (
  * Generate new list event
  * @description Generate new list when click on generate button
  */
-generateButton.addEventListener("click", () => {
+generateButton.addEventListener('click', () => {
   generateNewList(parseInt(listSizeInput.value));
 });
 
@@ -119,7 +104,7 @@ generateButton.addEventListener("click", () => {
  */
 const updateListSizeValue = () => {
   let value: number = parseInt(listSizeInput.value);
-  listSizeValue.innerText = "List size: " + value.toString();
+  listSizeValue.innerText = 'List size: ' + value.toString();
 };
 
 /**
@@ -130,7 +115,7 @@ const updateListSizeValue = () => {
 const updateSpeedValue = () => {
   let speed: number = parseInt(speedInput.value);
   SPEED = -speed + 1 * 100.01; // If speed = 1 => SPEED = 99.5, if speed = 100 => SPEED = 0.5
-  speedValue.innerText = "Speed: x" + speed.toString();
+  speedValue.innerText = 'Speed: x' + speed.toString();
 };
 
 /**
@@ -138,7 +123,7 @@ const updateSpeedValue = () => {
  * @param ms
  */
 const sleep = (ms: number) => {
-  return new Promise((resolve) => setTimeout(resolve, ms));
+  return new Promise(resolve => setTimeout(resolve, ms));
 };
 
 /**
@@ -151,7 +136,7 @@ const setBarColor = (id: number, color: string) => {
 };
 
 const setMultipleBarColor = (start: number, end: number, color: string) => {
-  console.log("Set multiple bar color: ", start, end, color);
+  console.log('Set multiple bar color: ', start, end, color);
   for (let i = start; i < end; i++) {
     setBarColor(i, color);
   }
@@ -172,7 +157,7 @@ const getBarColor = (id: number) => {
  */
 const resetBarColor = (id: number) => {
   const bar = document.getElementById(`bar-${id}`) as HTMLDivElement;
-  bar.style.backgroundColor = "white";
+  bar.style.backgroundColor = 'white';
 };
 
 /**
@@ -214,12 +199,12 @@ const updateDisplay = (isSorting: boolean) => {
     listSizeInput.disabled = true;
     generateButton.disabled = true;
     sortAlgoSelect.disabled = true;
-    sortButton.innerText = "⬛";
+    sortButton.innerText = '⬛';
   } else {
     listSizeInput.disabled = false;
     generateButton.disabled = false;
     sortAlgoSelect.disabled = false;
-    sortButton.innerText = "Sort";
+    sortButton.innerText = 'Sort';
   }
 };
 
@@ -230,7 +215,7 @@ const updateDisplay = (isSorting: boolean) => {
  * List size input event
  * @description Update list size value and generate new list
  */
-listSizeInput.addEventListener("input", function () {
+listSizeInput.addEventListener('input', function () {
   const value: number = parseInt(this.value);
 
   generateNewList(value);
@@ -242,7 +227,7 @@ listSizeInput.addEventListener("input", function () {
  * Speed input event
  * @description Update speed value
  */
-speedInput.addEventListener("input", function () {
+speedInput.addEventListener('input', function () {
   updateSpeedValue();
 });
 
@@ -253,7 +238,7 @@ speedInput.addEventListener("input", function () {
 let isSorting = false;
 // Abort controller to cancel sort
 let cancelSort = new AbortController();
-sortButton.addEventListener("click", async () => {
+sortButton.addEventListener('click', async () => {
   if (isSorting) {
     // Cancel sort if isSorting is true and reset cancelSort
     cancelSort.abort();
@@ -266,19 +251,19 @@ sortButton.addEventListener("click", async () => {
     updateDisplay(isSorting);
 
     switch (sortAlgoSelect.value) {
-      case "selection":
+      case 'selection':
         await selectionSort(LIST, cancelSort);
         break;
-      case "bubble":
+      case 'bubble':
         await bubbleSort(LIST, cancelSort);
         break;
-      case "insertion":
+      case 'insertion':
         await insertionSort(LIST, cancelSort);
         break;
-      case "merge":
+      case 'merge':
         await mergeSort(LIST, cancelSort);
         break;
-      case "quick":
+      case 'quick':
         await quickSort(LIST, cancelSort);
         break;
     }
@@ -295,13 +280,10 @@ sortButton.addEventListener("click", async () => {
  * Selection sort
  * @description Sort list with selection sort algorithm
  */
-const selectionSort = async (
-  list: Array<number>,
-  cancelSignal: AbortController,
-) => {
+const selectionSort = async (list: Array<number>, cancelSignal: AbortController) => {
   for (let i = 0; i < list.length; i++) {
     let min = i;
-    setBarColor(i, "#77738E");
+    setBarColor(i, '#77738E');
     for (let j = i + 1; j < list.length; j++) {
       // Check if sort is canceled before each iteration
       if (cancelSignal.signal.aborted) {
@@ -309,22 +291,22 @@ const selectionSort = async (
         return; // Stop sort function
       }
 
-      setBarColor(j, "#A089A4");
+      setBarColor(j, '#A089A4');
       if (list[j] < list[min]) {
         min = j;
       }
       await sleep(SPEED);
     }
     if (min !== i) {
-      setBarColor(min, "#006C5E");
-      setBarColor(i, "#006C5E");
+      setBarColor(min, '#006C5E');
+      setBarColor(i, '#006C5E');
       let tmp = list[i];
       list[i] = list[min];
       list[min] = tmp;
       await sleep(SPEED * (SPEED / 30));
       swapBar(i, min);
     }
-    setBarColor(i, "#C8A1B5");
+    setBarColor(i, '#C8A1B5');
     resetAllBarColor(i + 1);
   }
 };
@@ -333,10 +315,7 @@ const selectionSort = async (
  * Bubble sort
  * @description Sort list with bubble sort algorithm
  */
-const bubbleSort = async (
-  list: Array<number>,
-  cancelSignal: AbortController,
-) => {
+const bubbleSort = async (list: Array<number>, cancelSignal: AbortController) => {
   for (let i = list.length - 1; i > 0; i--) {
     for (let j = 0; j < i; j++) {
       // Check if sort is canceled before each iteration
@@ -344,7 +323,7 @@ const bubbleSort = async (
         resetAllBarColor();
         return; // Stop sort function
       }
-      setBarColor(j, "#77738E");
+      setBarColor(j, '#77738E');
 
       await sleep(SPEED);
       if (list[j] > list[j + 1]) {
@@ -353,29 +332,26 @@ const bubbleSort = async (
         list[j + 1] = tmp;
         swapBar(j, j + 1);
         resetBarColor(j);
-        setBarColor(j + 1, "#006C5E");
+        setBarColor(j + 1, '#006C5E');
       } else {
-        setBarColor(j + 1, "#006C5E");
+        setBarColor(j + 1, '#006C5E');
         await sleep(SPEED * (SPEED / 95));
         resetBarColor(j);
       }
     }
-    setBarColor(i, "#C8A1B5");
+    setBarColor(i, '#C8A1B5');
   }
-  setBarColor(0, "#C8A1B5");
+  setBarColor(0, '#C8A1B5');
 };
 
 /**
  * Insertion sort
  * @description Sort list with insertion sort algorithm
  */
-const insertionSort = async (
-  list: Array<number>,
-  cancelSignal: AbortController,
-) => {
+const insertionSort = async (list: Array<number>, cancelSignal: AbortController) => {
   for (let i = 1; i < list.length; i++) {
     let j = i - 1;
-    setBarColor(i - 1, "#77738E");
+    setBarColor(i - 1, '#77738E');
     await sleep(SPEED);
     while (j >= 0 && list[j] > list[j + 1]) {
       // Check if sort is canceled before each iteration
@@ -390,15 +366,15 @@ const insertionSort = async (
       list[j + 1] = tmp;
       swapBar(j, j + 1);
       setBarColor(j + 1, getBarColor(j));
-      setBarColor(j, "#006C5E");
+      setBarColor(j, '#006C5E');
       j--;
     }
     if (cancelSignal.signal.aborted) {
       resetAllBarColor();
       return; // Stop sort function
     }
-    setBarColor(j + 1, "#C8A1B5");
-    setBarColor(i - 1, "#C8A1B5");
+    setBarColor(j + 1, '#C8A1B5');
+    setBarColor(i - 1, '#C8A1B5');
   }
 };
 
@@ -406,10 +382,7 @@ const insertionSort = async (
  * Merge sort
  * @description Sort list with merge sort algorithm
  */
-const mergeSort = async (
-  list: Array<number>,
-  cancelSignal: AbortController,
-) => {
+const mergeSort = async (list: Array<number>, cancelSignal: AbortController) => {
   LIST = await mainMergeSort([...list], cancelSignal);
   if (cancelSignal.signal.aborted) {
     generateNewList(parseInt(listSizeInput.value));
@@ -418,16 +391,16 @@ const mergeSort = async (
 };
 
 const colorList = [
-  "#77738e",
-  "#6e6e89",
-  "#656983",
-  "#5c657e",
-  "#536078",
-  "#4a5b72",
-  "#42566c",
-  "#3a5265",
-  "#324d5f",
-  "#2a4858",
+  '#77738e',
+  '#6e6e89',
+  '#656983',
+  '#5c657e',
+  '#536078',
+  '#4a5b72',
+  '#42566c',
+  '#3a5265',
+  '#324d5f',
+  '#2a4858',
 ];
 
 const getColor = (id: number) => {
@@ -466,11 +439,7 @@ const mainMergeSort = async (
   const color2 = getColor(colorList.length - colorId - 1);
 
   setMultipleBarColor(startRight, startRight + left.length, color1);
-  setMultipleBarColor(
-    startRight + left.length,
-    startRight + left.length + list.length,
-    color2,
-  );
+  setMultipleBarColor(startRight + left.length, startRight + left.length + list.length, color2);
 
   const i = startRight + left.length;
   return merge(
@@ -499,36 +468,32 @@ const merge = async (
   while (left.length && right.length) {
     if (left[0] < right[0]) {
       for (let i = start + arr.length; i < start + arr.length; i++) {
-        setBarColor(i, "#006C5E");
+        setBarColor(i, '#006C5E');
         await sleep(SPEED);
         swapBar(i, i + 1);
-        setBarColor(i, "#C8A1B5");
-        setBarColor(i + 1, "#006C5E");
+        setBarColor(i, '#C8A1B5');
+        setBarColor(i + 1, '#006C5E');
 
         if (cancelSignal.signal.aborted) {
           resetAllBarColor();
           return [...arr, ...left, ...right]; // Stop sort function
         }
       }
-      setBarColor(start + arr.length, "#C8A1B5");
+      setBarColor(start + arr.length, '#C8A1B5');
       arr.push(left.shift() as number);
     } else {
-      for (
-        let i = start + arr.length + left.length;
-        i > start + arr.length;
-        i--
-      ) {
-        setBarColor(i, "#006C5E");
+      for (let i = start + arr.length + left.length; i > start + arr.length; i--) {
+        setBarColor(i, '#006C5E');
         await sleep(SPEED);
         swapBar(i, i - 1);
-        setBarColor(i, "#C8A1B5");
-        setBarColor(i - 1, "#006C5E");
+        setBarColor(i, '#C8A1B5');
+        setBarColor(i - 1, '#006C5E');
         if (cancelSignal.signal.aborted) {
           resetAllBarColor();
           return [...arr, ...left, ...right]; // Stop sort function
         }
       }
-      setBarColor(start + arr.length, "#C8A1B5");
+      setBarColor(start + arr.length, '#C8A1B5');
       arr.push(right.shift() as number);
     }
   }
@@ -542,11 +507,8 @@ const merge = async (
  * Quick sort
  * @description Sort list with quick sort algorithm
  */
-const quickSort = async (
-  list: Array<number>,
-  cancelSignal: AbortController,
-) => {
-  console.log("Quick sort");
+const quickSort = async (list: Array<number>, cancelSignal: AbortController) => {
+  console.log('Quick sort');
   console.log(list);
   list = await mainQuickSort([...list], cancelSignal);
   console.log(list);
@@ -560,10 +522,7 @@ const quickSort = async (
  * Main quick sort
  * @description Main quick sort function
  */
-const mainQuickSort = async (
-  list: Array<number>,
-  cancelSignal: AbortController,
-): Promise<Array<number>> => {
+const mainQuickSort = async (list: Array<number>, cancelSignal: AbortController): Promise<Array<number>> => {
   if (list.length < 2) {
     return list;
   }
@@ -586,15 +545,11 @@ const mainQuickSort = async (
   }
 
   const i = list.length - greater.length;
-  setMultipleBarColor(i, i + greater.length, "#006C5E");
-  setMultipleBarColor(0, i, "#C8A1B5");
-  setMultipleBarColor(i + greater.length, list.length, "#C8A1B5");
+  setMultipleBarColor(i, i + greater.length, '#006C5E');
+  setMultipleBarColor(0, i, '#C8A1B5');
+  setMultipleBarColor(i + greater.length, list.length, '#C8A1B5');
 
-  return [
-    ...(await mainQuickSort(lesser, cancelSignal)),
-    pivot,
-    ...(await mainQuickSort(greater, cancelSignal)),
-  ];
+  return [...(await mainQuickSort(lesser, cancelSignal)), pivot, ...(await mainQuickSort(greater, cancelSignal))];
 };
 
 //#endregion Sort functions
