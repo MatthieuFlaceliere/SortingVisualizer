@@ -5,7 +5,7 @@
   --color-secondary: #232946;
   --box-background: #fffffe;
   --box-color: #232946;
-  --disabled: #515E75;
+  --disabled: #515e75;
 
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -56,13 +56,13 @@ body {
   margin-bottom: 2rem;
 }
 
-.list{
+.list {
   display: flex;
   justify-content: center;
   flex-direction: row;
 }
 
-.list .list-size-input{
+.list .list-size-input {
   display: flex;
   justify-content: center;
   flex-direction: column;
@@ -119,7 +119,7 @@ input[type="range"]:disabled::-ms-thumb {
   background: var(--disabled);
 }
 
-label{
+label {
   margin-top: 1rem;
   margin-bottom: 1rem;
   font-size: 1rem;
@@ -127,10 +127,10 @@ label{
   color: var(--color-primary);
 }
 
-.button-container{
+.button-container {
   display: flex;
   justify-content: center;
-  margin-top: 2rem;; 
+  margin-top: 2rem;
 }
 
 .sort-algo {
@@ -144,7 +144,7 @@ label{
   font-weight: 600;
 }
 
-.sort-algo:disabled{
+.sort-algo:disabled {
   background-color: var(--disabled);
 }
 
@@ -161,7 +161,7 @@ label{
   width: 64px;
 }
 
-.generate-btn{
+.generate-btn {
   margin-left: 1rem;
   border-radius: 50%;
   width: 35px;
@@ -174,16 +174,15 @@ label{
   font-weight: 600;
 }
 
-.generate-btn:disabled{
+.generate-btn:disabled {
   background-color: var(--disabled);
 }
 
-.generate-btn img{
+.generate-btn img {
   width: 80%;
   height: 80%;
   margin-top: 3.5px;
 }
-
 
 @media screen and (max-width: 768px) {
   #app {
@@ -200,12 +199,12 @@ label{
 }
 
 @media screen and (max-width: 330px) {
-  .button-container{
+  .button-container {
     flex-direction: column;
     justify-content: center;
   }
 
-  .generate-input-container{
+  .generate-input-container {
     margin-top: 1rem;
   }
 }
